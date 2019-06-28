@@ -6,6 +6,7 @@ Asteroids clone with Phaser 3 and TypeScript
 * [Node.js](https://nodejs.org)
 
 ## Instructions
+|---------|-------------|
 | `npm install` | Install dependencies |
 | `npm run build:dev` | Build unminified copy of the game to ./build/ |
 | `npm run build:prod` | Build minified copy of the game to ./build/ |
