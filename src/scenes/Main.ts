@@ -4,6 +4,7 @@ import { ShipEntity } from "../entities/ShipEntity";
 import { Vec2 } from "../utils/Vec2";
 import { AsteroidEntity } from "../entities/AsteroidEntity";
 import { RocketEntity } from "../entities/RocketEntity";
+import { ShipController } from "../controllers/ShipController";
 
 export class Main extends Phaser.Scene {
 
@@ -14,6 +15,8 @@ export class Main extends Phaser.Scene {
     private playerRespawnTimer: number;
     private playerRespawnTimerMax: number;
     private playerCanFire: boolean;
+
+    private shipController: ShipController;
     
     constructor() {
         super("main");
@@ -24,13 +27,14 @@ export class Main extends Phaser.Scene {
         this.playerRespawnTimerMax = 2000;
         this.playerCanFire = true;
 
-
         this.player = new ShipEntity(this, this.particleManager, new Vec2());
         this.entities.push(this.player);
 
         for (let i = 0; i < 8; ++i) {
             this.entities.push(new AsteroidEntity(this, this.particleManager, new Vec2(), 2 + i % 4));
         }
+
+        this.shipController = new ShipController(this, this.player, this.entities);
     }
 
     public create() {     
@@ -49,9 +53,14 @@ export class Main extends Phaser.Scene {
             }
             entity.create();
         });
+
+        this.shipController.create();
     }
 
     public update(time: number, delta: number) {
+        // Ship Controller
+        this.shipController.update(time, delta);
+
         // Respawn
         if (this.playerRespawnTimer > 0) {
             this.playerRespawnTimer -= delta;
@@ -61,11 +70,13 @@ export class Main extends Phaser.Scene {
             let height = this.cameras.cameras[0].height;
             this.player.respawn(new Vec2(width / 2, height / 2));
             this.entities.push(this.player);
+            this.shipController.enabled = true;
         }
 
         // Input
         if (this.player.isAlive()) {
             if (this.input.activePointer.isDown) {
+                this.shipController.enabled = false;
                 if (this.playerCanFire) {
                     this.entities.push(this.player.fire());
                     this.playerCanFire = false;

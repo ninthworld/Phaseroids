@@ -79,22 +79,32 @@ export abstract class SceneEntity extends Entity {
     }
 
     public isColliding(other: SceneEntity): boolean {
-        if (this.vertices.length < 2 || other.vertices.length < 2) return false;
+        if (this.vertices.length < 2 || other.vertices.length < 2) return false;        
+        for (let i = 0; i < other.vertices.length; ++i) {
+            let lineB = new Line(other.vertices[i], other.vertices[(i + 1) % other.vertices.length]);
+            lineB.a.x += other.position.x;
+            lineB.a.y += other.position.y;
+            lineB.b.x += other.position.x;
+            lineB.b.y += other.position.y;
+            if (this.isCollidingLine(lineB)) return true;
+        }
+        return false;
+    }
+
+    public isCollidingLine(line: Line): boolean {
+        if (this.vertices.length < 2) return false;
         for (let i = 0; i < this.vertices.length; ++i) {
             let lineA = new Line(this.vertices[i], this.vertices[(i + 1) % this.vertices.length]);
             lineA.a.x += this.position.x;
             lineA.a.y += this.position.y;
             lineA.b.x += this.position.x;
             lineA.b.y += this.position.y;
-            for (let j = 0; j < other.vertices.length; ++j) {
-                let lineB = new Line(other.vertices[j], other.vertices[(j + 1) % other.vertices.length]);
-                lineB.a.x += other.position.x;
-                lineB.a.y += other.position.y;
-                lineB.b.x += other.position.x;
-                lineB.b.y += other.position.y;                    
-                if (lineA.intersects(lineB)) return true;
-            }
+            if (lineA.intersects(line)) return true;
         }
         return false;
+    }
+
+    public getSize(): number {
+        return this.size;
     }
 }

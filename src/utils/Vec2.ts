@@ -12,4 +12,8 @@ export class Vec2 {
     public clone(): Vec2 {
         return new Vec2(this.x, this.y);
     }
+
+    public distanceTo(other: Vec2): number {
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    }
 }
