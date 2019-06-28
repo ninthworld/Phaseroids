@@ -2,6 +2,10 @@
 
 Asteroids clone with Phaser 3 and TypeScript
 
+![Banner](media/Phaseroids_Banner.png)
+
+Live Demo: [https://ninthworld.github.io/Phaseroids/build/](https://ninthworld.github.io/Phaseroids/build/)
+
 ## Requirements
 * [Node.js](https://nodejs.org)
 
